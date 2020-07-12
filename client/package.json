@@ -1,15 +1,16 @@
 {
-  "name": "eepromp-dumper-client",
-  "version": "1.0.0",
+  "name": "eeprom-dumper-client",
   "description": "EEPROM dumper",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
+  "version": "1.0.0",
+  "license": "BSD-2-Clause",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/llmora/eeprom-dumper.git"
   },
+  "bugs": {
+    "url": "https://github.com/llmora/eeprom-dumper/issues"
+  },
+  "homepage": "https://github.com/llmora/eeprom-dumper#readme",
   "keywords": [
     "eeprom",
     "arduino",
@@ -17,9 +18,31 @@
     "serial"
   ],
   "author": "@lluismh",
-  "license": "BSD-2-Clause",
-  "bugs": {
-    "url": "https://github.com/llmora/eeprom-dumper/issues"
+  "build": {
+    "appId": "gi.flow.eeprom-dumper-client"
   },
-  "homepage": "https://github.com/llmora/eeprom-dumper#readme"
+  "scripts": {
+    "dev": "electron-webpack dev",
+    "compile": "electron-webpack",
+    "pack": "electron-builder --dir",
+    "dist": "yarn compile && electron-builder",
+    "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "bootstrap": "^4.5.0",
+    "css-loader": "^3.6.0",
+    "serialport": "^9.0.0",
+    "source-map-support": "^0.5.16",
+    "vue": "^2.6.11",
+    "vue-loader": "^15.9.3",
+    "vue-router": "^3.3.4",
+    "vue-template-compiler": "^2.6.11"
+  },
+  "devDependencies": {
+    "electron": "8.2.0",
+    "electron-builder": "^22.4.1",
+    "electron-webpack": "^2.8.2",
+    "webpack": "~4.42.1"
+  }
 }
