@@ -21,7 +21,7 @@
 
 typedef struct
 {
-  byte command;
+  byte command;            // 8-bit, command type
   byte i2c_address;        // 8-bit, address of the i2c eeprom device to dump
   unsigned int frequency;  // 16-bit, frequency of the i2c eeprom device to dump (in kHz)
   unsigned int start_byte; // 16-bit, first memory address to dump
@@ -30,8 +30,8 @@ typedef struct
 
 typedef struct
 {
-  unsigned int status;
-  unsigned int length;
+  unsigned int status; // 16-bit, status of response
+  unsigned int length; // 16-bit, length of content
 } server_command;
 
 void setup()

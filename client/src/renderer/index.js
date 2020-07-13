@@ -1,8 +1,7 @@
-// Initial welcome page. Delete the following line to remove it.
-
 'use strict';
 const { dialog } = require("electron").remote;
 const SerialPort = require('serialport')
+const eepromSerial = require('../modules/eeprom-serial')
 
 require('../../node_modules/bootstrap/dist/css/bootstrap.min.css')
 

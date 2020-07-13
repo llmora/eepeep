@@ -27,12 +27,15 @@
     "pack": "electron-builder --dir",
     "dist": "yarn compile && electron-builder",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
-    "postinstall": "electron-builder install-app-deps"
+    "postinstall": "electron-builder install-app-deps",
+    "test": "mocha"
   },
   "dependencies": {
     "bootstrap": "^4.5.0",
     "css-loader": "^3.6.0",
+    "mocha": "^8.0.1",
     "serialport": "^9.0.0",
+    "sinon": "^9.0.2",
     "source-map-support": "^0.5.16",
     "vue": "^2.6.11",
     "vue-loader": "^15.9.3",
