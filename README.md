@@ -38,10 +38,6 @@ $ cd client && yarn dist
 ```
 Before you launch the software client make sure the hardware component is connected and powered up through USB.
 
-```console
-$ yarn run
-```
-
 # Contributing to eepeep
 
 If you find `eepeep` useful consider contributing to its development by sharing issues you face during it usage, submitting pull requests to add new functionality or suggesting ideas for improvement. If you end-up developing code for `eepeep` you will find the following commands useful:
@@ -55,12 +51,9 @@ If you submit new functionality it will be great it you can submit test cases to
 
 If you are in the mood to implement new functionality for `eepeep` the following list shows the prioritised list of pending functionality; it will be eventually implemented but certainly it will be faster if you implement it :-)
 
-*Release 1.0*
-  * Compile binaries for Linux
-  * Compile binaries for Windows
-
 *Release 1.1*
   * Write blog post
+  * Add screenshots to README
   * Refresh list of ports dynamically
   * Prefix time with console log entry
   * Checksum verification
