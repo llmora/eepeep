@@ -19,7 +19,14 @@
   ],
   "author": "@lluismh",
   "build": {
-    "appId": "gi.flow.eepeep"
+    "productName": "eepeep",
+    "appId": "gi.flow.eepeep",
+    "linux": {
+      "target": "AppImage, deb, snap, rpm"
+    },
+    "win": {
+      "target": "nsis"
+    }
   },
   "scripts": {
     "dev": "electron-webpack dev",
