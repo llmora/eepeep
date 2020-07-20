@@ -1,0 +1,6 @@
+{
+    "board": "arduino:avr:uno",
+    "port": "/dev/ttyACM0",
+    "programmer": "AVR ISP",
+    "sketch": "server/arduino/eeprom_dumper.ino"
+}

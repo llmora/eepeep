@@ -1,4 +1,5 @@
 const { Transform } = require('stream')
+const log = require('electron-log');
 
 /**
  * Parse the EEPROM dumper protocol
@@ -6,18 +7,23 @@ const { Transform } = require('stream')
  * @summary A transform stream that emits EEPROM dumper response as they are received.
  * @example
 const SerialPort = require('serialport')
-const EEProm = require('eeprom-serial')
+const { EEPromSerialParser } = require('eeprom-serial-parser')
 const port = new SerialPort('/dev/ttyUSB0')
-const parser = port.pipe(new EEProm())
+const parser = port.pipe(new EEPromSerialParser())
 parser.on('data', console.log)
 */
 
-const STATE_START = 0
-const STATE_STATUS_READ = 1
-const STATE_LENGTH_READ = 2
-const STATE_DATA_READ = 3
+export namespace EEPromSerialParserState {
+  export enum State {
+    STATE_START = 0,
+    STATE_STATUS_READ = 1,
+    STATE_LENGTH_READ = 2,
+    STATE_DATA_READ = 3
+  }
+}
 
-class EEPromParser extends Transform {
+class EEPromSerialParser extends Transform {
+
   constructor() {
     super({ readableObjectMode: true })
 
@@ -27,53 +33,61 @@ class EEPromParser extends Transform {
   }
 
   resetStatus() {
-    this.state = STATE_START
+    this.state = EEPromSerialParserState.State.STATE_START
     this.status = -1;
     this.length = -1;
     this.data = [];
   }
 
-  _transform(chunk, _, cb) {
+  _transform(chunk, encoding, cb) {
+
+    log.debug(`STATE: ${this.state} - Received chunk of length ${chunk.length}`);
+    log.debug(chunk)
 
     Array.from(chunk).map(byte => this.pendingData.push(byte))
 
-//     console.log(this.pendingData)
+    var continueParsing = true;
 
-    while (this.pendingData.length) {
+    while (this.pendingData.length && continueParsing) {
       switch (this.state) {
 
-        case STATE_START:
+        case EEPromSerialParserState.State.STATE_START:
           if (this.pendingData.length >= 2) {
             this.status = (this.pendingData[0] << 8) + this.pendingData[1];
-            this.state = STATE_STATUS_READ;
+            this.state = EEPromSerialParserState.State.STATE_STATUS_READ;
             this.pendingData.splice(0, 2);
           } else {
+            continueParsing = false;
             continue;
           }
           break;
 
-        case STATE_STATUS_READ:
+        case EEPromSerialParserState.State.STATE_STATUS_READ:
           if (this.pendingData.length >= 2) {
             this.length = (this.pendingData[0] << 8) + this.pendingData[1];
-            this.state = STATE_LENGTH_READ;
+
+            log.debug(`Received length: ${this.length}`);
+            this.state = EEPromSerialParserState.State.STATE_LENGTH_READ;
             this.pendingData.splice(0, 2);
           } else {
+            continueParsing = false;
             continue;
           }
           break;
 
-        case STATE_LENGTH_READ:
+        case EEPromSerialParserState.State.STATE_LENGTH_READ:
           if (this.pendingData.length >= this.length) {
             this.data = this.pendingData.slice(0, this.length)
-            this.state = STATE_DATA_READ;
+            this.state = EEPromSerialParserState.State.STATE_DATA_READ;
             this.pendingData.splice(0, this.length);
           } else {
+            continueParsing = false;
             continue;
           }
           break;
       }
 
-      if ((this.state == STATE_DATA_READ) || (this.state == STATE_LENGTH_READ && this.length == 0)) {
+      if ((this.state == EEPromSerialParserState.State.STATE_DATA_READ) || (this.state == EEPromSerialParserState.State.STATE_LENGTH_READ && this.length == 0)) {
         this.push({ status: this.status, data: this.data })
         this.resetStatus()
       }
@@ -83,4 +97,4 @@ class EEPromParser extends Transform {
   }
 }
 
-module.exports = EEPromParser
+module.exports = { EEPromSerialParser } 

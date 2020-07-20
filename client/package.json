@@ -28,11 +28,13 @@
     "dist": "yarn compile && electron-builder",
     "dist:dir": "yarn dist --dir -c.compression=store -c.mac.identity=null",
     "postinstall": "electron-builder install-app-deps",
-    "test": "mocha"
+    "test": "mocha -r ts-node/register src/**/*.spec.ts"
   },
   "dependencies": {
+    "@types/mocha": "^8.0.0",
     "bootstrap": "^4.5.0",
     "css-loader": "^3.6.0",
+    "electron-log": "^4.2.2",
     "mocha": "^8.0.1",
     "serialport": "^9.0.0",
     "sinon": "^9.0.2",
@@ -43,9 +45,13 @@
     "vue-template-compiler": "^2.6.11"
   },
   "devDependencies": {
+    "chai": "^4.2.0",
     "electron": "8.2.4",
     "electron-builder": "^22.4.1",
     "electron-webpack": "^2.8.2",
+    "ts-loader": "^8.0.1",
+    "ts-node": "^8.10.2",
+    "typescript": "^3.9.7",
     "webpack": "~4.42.1"
   }
 }

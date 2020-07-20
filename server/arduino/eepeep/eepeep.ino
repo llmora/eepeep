@@ -6,6 +6,8 @@
 
 #include <Wire.h>
 
+#define ENDIAN(x) (x >> 8) | (x << 8)
+
 #define MAX_I2C_ADDRESS 128
 
 #define STATUS_OK 0
@@ -13,6 +15,10 @@
 #define STATUS_ERROR_COMMAND 2
 #define STATUS_SCAN_RESULT 3
 #define STATUS_SCAN_NOTFOUND 4
+#define STATUS_DUMP 5
+#define STATUS_READY 6
+#define STATUS_LOG 7
+#define STATUS_ERROR_DUMP 8
 
 #define MSG_DUMP_STARTING "Dump starting"
 
@@ -40,7 +46,7 @@ void setup()
   Wire.begin();
   delay(1000);
 
-  sendMessage(STATUS_OK, "EEPROM dumper ready");
+  sendMessage(STATUS_READY, "EEPROM v1.0 dumper ready");
 }
 
 void loop()
@@ -55,21 +61,12 @@ void loop()
 
     switch (cmd.command)
     {
-
     case COMMAND_DUMP:
-      Wire.setClock(cmd.frequency * 1000);
-
-      sendMessage(STATUS_OK, "Dump starting");
-
-      for (unsigned int i = cmd.start_byte; i <= cmd.end_byte; i++)
-      {
-        byte b = eeprom_read(cmd.i2c_address, i);
-        Serial.write(b);
-      }
-
+      dump(&cmd);
       break;
 
     case COMMAND_SCAN:
+
       Wire.setClock(cmd.frequency * 1000);
 
       sendMessage(STATUS_OK, "Scan starting");
@@ -80,7 +77,6 @@ void loop()
       }
       else
       {
-        sendMessage(STATUS_OK, "i2c device found");
         sendCommand(STATUS_SCAN_RESULT, scanned_device_addresses, sizeof(scanned_device_addresses));
       }
       break;
@@ -89,11 +85,36 @@ void loop()
       sendMessage(STATUS_ERROR_COMMAND, "Invalid command received");
     }
   }
-  else
-  {
-    sendMessage(STATUS_ERROR_PARAMETERS, "Invalid parameters");
-    delay(1000);
+
+  delay(1000);
+}
+
+int dump(client_command *cmd) {
+  Wire.setClock(cmd->frequency * 1000);
+
+  sendMessage(STATUS_OK, "Dump starting");
+
+  bool dumpHeaderSent = false;
+
+  for (unsigned int i = cmd->start_byte; i <= cmd->end_byte; i++) {
+    byte b;
+
+    if (eeprom_read(cmd->i2c_address, i, &b) != 0) {
+      sendMessage(STATUS_ERROR_DUMP, "Error dumping EEPROM content");
+      return -1;
+    } else {
+      if(! dumpHeaderSent) {
+        sendCommandHeader(STATUS_DUMP, cmd->end_byte - cmd->start_byte + 1);
+        dumpHeaderSent = true;
+      }
+
+      Serial.write(b);
+    }
   }
+
+  Serial.flush();
+
+  return 0;
 }
 
 int sendMessage(int status, const char *msg)
@@ -103,16 +124,30 @@ int sendMessage(int status, const char *msg)
 
 int sendCommand(int status, byte *buf, unsigned int length)
 {
+  int ret = 0;
 
+  ret = sendCommandHeader(status, length);
+
+  if (ret > 0)
+  {
+    ret = ret + Serial.write(buf, length);
+  }
+
+  Serial.flush();
+
+  return ret;
+}
+
+int sendCommandHeader(int status, unsigned int length)
+{
   int ret = 0;
 
   server_command cmd;
 
-  cmd.status = status;
-  cmd.length = length;
+  cmd.status = ENDIAN(status);
+  cmd.length = ENDIAN(length);
 
-  ret = ret + Serial.write((byte *)&cmd, sizeof(cmd));
-  ret = ret + Serial.write(buf, length);
+  ret = Serial.write((byte *)&cmd, sizeof(cmd));
 
   return ret;
 }
@@ -120,13 +155,18 @@ int sendCommand(int status, byte *buf, unsigned int length)
 int readCommand(client_command *cmd)
 {
   int ret = -1;
+  char message[128];
 
-  // [i2c_address][freq][start_byte][end_byte]
+  memset(message, 0, sizeof(message));
 
   if (Serial.available() >= sizeof(client_command))
   {
     if (Serial.readBytes((byte *)cmd, sizeof(client_command)) == sizeof(client_command))
     {
+
+      cmd->frequency = ENDIAN(cmd->frequency);
+      cmd->start_byte = ENDIAN(cmd->start_byte);
+      cmd->end_byte = ENDIAN(cmd->end_byte);
 
       // If frequency is zero then set to 100kHz
       if (cmd->frequency == 0)
@@ -134,16 +174,12 @@ int readCommand(client_command *cmd)
         cmd->frequency = 100;
       }
 
-      cmd->command = COMMAND_SCAN;
-      cmd->frequency = 100;
-
       ret = 0;
-    }
 
-    //    cmd->frequency = 400;
-    //    cmd->start_byte = 0;
-    //    cmd->end_byte = 255;
-    //    cmd->i2c_address = 0x50;
+      if(snprintf(message, sizeof(message), "ARDUINO: Received command %d, frequency: %d, start: %d, end: %d", cmd->command, cmd->frequency, cmd->start_byte, cmd->end_byte) > 0) {
+        sendMessage(STATUS_LOG, message);
+      }
+    }
   }
 
   return ret;
@@ -172,16 +208,20 @@ int eeprom_scan(byte devices[])
   return ret;
 }
 
-byte eeprom_read(int device_address, long block)
+int eeprom_read(int device_address, long block, byte *b)
 {
+  int ret = -1;
+
   Wire.beginTransmission(device_address);
   Wire.write((unsigned int)block);
   Wire.endTransmission();
 
   Wire.requestFrom(device_address, 1);
 
-  byte rdata = 0xFF;
-  if (Wire.available())
-    rdata = Wire.read();
-  return rdata;
+  if (Wire.available()) {
+    *b = Wire.read();
+    ret = 0;
+  }
+
+  return ret;
 }
