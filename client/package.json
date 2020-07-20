@@ -17,7 +17,7 @@
     "electronjs",
     "serial"
   ],
-  "author": "@lluismh",
+  "author": "LluisMora <lluismh@gmail.com> (http://flow.gi/)",
   "build": {
     "productName": "eepeep",
     "appId": "gi.flow.eepeep",
