@@ -64,6 +64,7 @@ If you are in the mood to implement new functionality for `eepeep` the following
   * Add preloaded configurations for at least 5 EEPROMs (and test them)
   * Write tests for UI interaction
   * Add logo
+  * Scan result as bit-pack of 0 and 1 instead of ASCII
   * Add autoupdate capabilities (https://www.electron.build/auto-update)
   * Compile binaries for MacOS
 

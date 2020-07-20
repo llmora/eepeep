@@ -1,16 +1,16 @@
 {
-  "name": "eeprom-dumper-client",
-  "description": "EEPROM dumper",
+  "name": "eepeep",
+  "description": "eepeep - EEPROM dumper",
   "version": "1.0.0",
   "license": "BSD-2-Clause",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/llmora/eeprom-dumper.git"
+    "url": "git+https://github.com/llmora/eepeep.git"
   },
   "bugs": {
-    "url": "https://github.com/llmora/eeprom-dumper/issues"
+    "url": "https://github.com/llmora/eepeep/issues"
   },
-  "homepage": "https://github.com/llmora/eeprom-dumper#readme",
+  "homepage": "https://github.com/llmora/eepeep#readme",
   "keywords": [
     "eeprom",
     "arduino",
@@ -19,7 +19,7 @@
   ],
   "author": "@lluismh",
   "build": {
-    "appId": "gi.flow.eeprom-dumper-client"
+    "appId": "gi.flow.eepeep"
   },
   "scripts": {
     "dev": "electron-webpack dev",

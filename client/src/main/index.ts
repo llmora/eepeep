@@ -10,7 +10,7 @@ const isDevelopment = process.env.NODE_ENV !== 'production'
 let mainWindow
 
 function createMainWindow() {
-  const window = new BrowserWindow({ webPreferences: { nodeIntegration: true }, title: 'EEPROM dumper' })
+  const window = new BrowserWindow({ webPreferences: { nodeIntegration: true }, title: 'eepeep - EEPROM dumper' })
 
   window.setMenuBarVisibility(false)
 

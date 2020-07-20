@@ -136,6 +136,8 @@ class EEPromSerialStatemachine {
               this.logMessage(0, "Scan completed successfully")
 
               let devices = Array.from(msg.data)
+              
+              log.debug("DEVICES LENGTH " + devices.length)
 
               if (devices.length == 128) {
                 for (let i = 0; i < devices.length; i++) {
