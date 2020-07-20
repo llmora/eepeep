@@ -25,8 +25,11 @@ Flash the Arduino with the [eepeep firmware](server/arduino/eepeep/eepeep.ino) a
 
 The software component of `eepeep` is an ElectronJS application that communicates with the hardware component through serial port commands, precompiled binaries are available for the following platforms:
 
-* [Windows]()
-* [Linux]()
+* [Windows](https://flow.gi/assets/releases/eepeep%20Setup%201.0.0.exe)
+* [Linux x64 .deb](https://flow.gi/assets/releases/eepeep_1.0.0_amd64.deb)
+* [Linux x64 .rpm](https://flow.gi/assets/releases/eepeep-1.0.0.x86_64.rpm)
+* [Linux AppImage](https://flow.gi/assets/releases/eepeep-1.0.0.AppImage)
+* [Linux snap](https://flow.gi/assets/releases/eepeep_1.0.0_amd64.snap)
 
 If your platform is not listed of you prefer to compile the software yourself just checkout this repository and execute the following command:
 
