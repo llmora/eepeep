@@ -1,6 +1,6 @@
 # eepeep: in-circuit EEPROM dumper
 
-During the reverse engineering of hardware systems it is handy to be able to dump EEPROMs without removing them from the circuit under examination, it makes for faster and easier system analysis. `eepeep` comes with a preconfigured list of EEPROMs for ease of use but it can be customised to extract any EEPROM that supports the i2c protocol.
+During the reverse engineering of hardware systems it is handy to be able to dump EEPROMs without removing them from the circuit under examination, it makes for faster and easier system analysis. `eepeep` comes with a preconfigured list of EEPROMs for ease of use but it can be customised to extract any EEPROM that supports the I<sup>2</sup>C protocol.
 
 `eepeep` hardware component connects to the EEPROMs using logical probes and then the software component is used to run the extraction.
 
@@ -10,7 +10,7 @@ You can find a detailed step-by-step guide on extracting EEPROMs with eepeep in 
 
 ## Hardware component
 
-The hardware component acts as a bridge between the client and the EEPROM, implementing the bus scanning and EEPROM access protocols. At its core it is a state machine that receives messages from the client (scan bus, dump eeprom) and translates these to the i2c protocol commands that interact with the EEPROMs.
+The hardware component acts as a bridge between the client and the EEPROM, implementing the bus scanning and EEPROM access protocols. At its core it is a state machine that receives messages from the client (scan bus, dump eeprom) and translates these to the I<sup>2</sup>C protocol commands that interact with the EEPROMs.
 
 ### Arduino hardware implementation
 
@@ -57,6 +57,7 @@ If you are in the mood to implement new functionality for `eepeep` the following
 
 *Release 1.1*
   * Refresh list of ports dynamically
+  * Show firmware version in welcome message
   * Prefix time with console log entry
   * Checksum verification
   * Add preloaded configurations for at least 5 EEPROMs (and test them)
