@@ -4,6 +4,10 @@ During the reverse engineering of hardware systems it is handy to be able to dum
 
 `eepeep` hardware component connects to the EEPROMs using logical probes and then the software component is used to run the extraction.
 
+![EEPROM dump](client/eepeep-dump.png "EEPROM dump")
+
+You can find a detailed step-by-step guide on extracting EEPROMs with eepeep in [this blog post](https://flow.gi/eepeep/).
+
 ## Hardware component
 
 The hardware component acts as a bridge between the client and the EEPROM, implementing the bus scanning and EEPROM access protocols. At its core it is a state machine that receives messages from the client (scan bus, dump eeprom) and translates these to the i2c protocol commands that interact with the EEPROMs.
@@ -52,8 +56,6 @@ If you submit new functionality it will be great it you can submit test cases to
 If you are in the mood to implement new functionality for `eepeep` the following list shows the prioritised list of pending functionality; it will be eventually implemented but certainly it will be faster if you implement it :-)
 
 *Release 1.1*
-  * Write blog post
-  * Add screenshots to README
   * Refresh list of ports dynamically
   * Prefix time with console log entry
   * Checksum verification
