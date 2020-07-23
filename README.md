@@ -29,7 +29,7 @@ Flash the Arduino with the [eepeep firmware](server/arduino/eepeep/eepeep.ino) a
 
 The software component of `eepeep` is an ElectronJS application that communicates with the hardware component through serial port commands, precompiled binaries are available for the following platforms:
 
-* [Windows](https://github.com/llmora/eepeep/releases/download/1.0/eepeep%20Setup%201.0.0.exe)
+* [Windows](https://github.com/llmora/eepeep/releases/download/1.0/eepeep.Setup.1.0.0.exe)
 * [Linux x64 .deb](https://github.com/llmora/eepeep/releases/download/1.0/eepeep_1.0.0_amd64.deb)
 * [Linux x64 .rpm](https://github.com/llmora/eepeep/releases/download/1.0/eepeep-1.0.0.x86_64.rpm)
 * [Linux AppImage](https://github.com/llmora/eepeep/releases/download/1.0/eepeep-1.0.0.AppImage)
